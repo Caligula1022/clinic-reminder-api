@@ -19,6 +19,11 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 public class ApiController {
 
+	@RequestMapping("/")
+	public String home() {
+		return "Hello World!";
+	}
+
 	@Autowired
 	MappingRepo mappingRepo;
 	
@@ -128,6 +133,6 @@ public class ApiController {
 			//return a.getOverallStatus() > b.getOverallStatus() ? 1 : -1;
 		}
 	};
-	
+
 	
 }
