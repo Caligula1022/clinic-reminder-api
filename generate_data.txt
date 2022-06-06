@@ -1,0 +1,128 @@
+import pymysql
+
+def savePatient(patient_id, name):
+    
+    sql = """
+        insert into tpatient (patient_id, patient_name) values ({patient_id}, '{name}')
+    """.format(
+        name = name,
+        patient_id = patient_id
+    )
+    
+    con = pymysql.connect(
+        'localhost', 
+        'root',
+        '', 
+        'reservation')
+
+    with con:
+
+        cur = con.cursor()
+        cur.execute(sql)
+        
+
+def saveDoctor(doctor_id, name):
+    
+    sql = """
+        insert into tdoctor (doctor_id, doctor_name) values ({doctor_id}, '{name}')
+    """.format(
+        name = name,
+        doctor_id = doctor_id
+    )
+    
+    con = pymysql.connect(
+        'localhost', 
+        'root',
+        '', 
+        'reservation')
+
+    with con:
+
+        cur = con.cursor()
+        cur.execute(sql)
+        
+def saveMapping(doctor_id, patient_id):
+    
+    sql = """
+        insert into tmapping (doctor_id, patient_id) values ({doctor_id}, {patient_id})
+    """.format(
+        doctor_id = doctor_id,
+        patient_id = patient_id
+    )
+    
+    con = pymysql.connect(
+        'localhost', 
+        'root',
+        '', 
+        'reservation')
+
+    with con:
+
+        cur = con.cursor()
+        cur.execute(sql)
+
+def saveReminder(mid, title, desc, duration, priority, created_time):
+    
+    sql = """
+        insert into
+            treminder(
+                treminder.mid, 
+                treminder.title, 
+                treminder.desc, 
+                treminder.duration, 
+                treminder.priority, 
+                treminder.created_time
+            )
+        values (
+            {mid},
+            '{title}',
+            '{desc}',
+            {duration},
+            '{priority}',
+            {created_time}
+        )
+    """.format(
+        mid=mid,
+        title=title,
+        desc=desc,
+        duration=duration,
+        priority=priority,
+        created_time=created_time
+    )
+    
+    #print (sql)
+    con = pymysql.connect(
+        'localhost', 
+        'root',
+        '', 
+        'reservation')
+
+    with con:
+
+       cur = con.cursor()
+       cur.execute(sql)
+
+for i in range(1,501):
+    d_id = i
+    saveDoctor(d_id, "Doctor " + str(d_id))
+    for j in range(1,41):
+        p_id = (d_id*1000)+j
+        savePatient(p_id, "Patient " + str(p_id))
+        saveMapping(d_id, p_id)
+		
+		
+import random 
+priorityList = ['HIGH', 'MIDDLE', 'LOW']
+
+for mid in range(26,66):
+    for day in range (0,15):
+        for j in range (1, random.randint(10,20)):
+            saveReminder(
+                mid, 
+                'test reminder', 
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+                random.randint(1, 48),
+                random.choice(priorityList),
+                'DATE_SUB(NOW(), INTERVAL ' + str(day) + ' DAY)'
+            )
+    
